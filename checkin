@@ -1,0 +1,10 @@
+#!/bin/bash
+#################################################################
+bindir="$(cd $(dirname $0) ; pwd -P)"
+
+branch="$(git branch | grep '\*' | cut -d' ' -f2-)"
+git pull origin ${branch}
+
+cmt="$(echo $(git log -n 1 | grep -v 'Author:' | grep -v 'Date:' | grep -v commit))"
+[ "${cmt:0:$(expr ${#pk} + 1)}" != "${pk}:" ] && cmt="${pk}: ${cmt}"
+git add --all . && EDITOR="jed" git commit -e -m "${cmt}" && git push origin ${branch} 
